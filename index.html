@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0329_work_3(game_size_clear)</title>
+</head>
+
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+        font-size: 20px;
+    }
+
+    nav {
+        width: 100%;
+        height: 50px;
+        padding: 5px 20px 5px 20px;
+        background-color: rgb(205, 194, 255);
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .start,
+    .score,
+    .timeleft {
+        width: 200px;
+        height: 40px;
+        background-color: rgb(150, 150, 150);
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .game {
+        margin: 50px auto;
+        padding: 0px 5px;
+        background-color: rgb(202, 255, 255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+    }
+
+    .box {
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        border-radius: 5px;
+    }
+</style>
+
+<body>
+    <nav>
+        <div class="start">START</div>
+        <div class="score">SCORE:</div>
+        <div class="timeleft">TIME:</div>
+    </nav>
+    <main>
+        <div class="game">
+        </div>
+    </main>
+
+    <script>
+        const game = document.querySelector('.game')
+        const start = document.querySelector('.start')
+        const score = document.querySelector('.score')
+        const timeleft = document.querySelector('.timeleft')
+        var timer
+        var vp = 0
+        var dif = 2
+        var wrong = 0
+        var opacity = 0.5
+        var time
+
+        function startplay() {
+            game.innerHTML = ''
+
+            var ans = Math.floor(Math.random() * dif ** 2)
+
+            var r = Math.floor(Math.random() * 256)
+            var g = Math.floor(Math.random() * 256)
+            var b = Math.floor(Math.random() * 256)
+
+            game.style.width = (dif * 120) + 'px'
+
+            for (let A = 0; A < dif ** 2; A++) {
+                if (A == ans) {
+                    game.innerHTML += '<div class="box" onclick="anscheck(1)"; style="background-color: rgb(' + r + ',' + g + ',' + b + '); opacity:' + opacity + ';"></div>'
+                } else {
+                    game.innerHTML += '<div class="box" onclick="anscheck(0)"; style="background-color: rgb(' + r + ',' + g + ',' + b + ');"></div>'
+                }
+            }
+        }
+
+        function anscheck(guess) {
+            if (guess == 1) {
+                vp++;
+                score.innerHTML = 'SCORE:' + vp;
+                if (vp <= 3) {
+                    dif = 2
+                } else if (vp <= 6) {
+                    dif = 3
+                    opacity = 0.6
+                } else if (vp <= 9) {
+                    dif = 4
+                    opacity = 0.7
+                } else if (vp <= 9) {
+                    dif = 4
+                    opacity = 0.8
+                } else if (vp <= 12) {
+                    dif = 5
+                    opacity = 0.9
+                } else {
+                    dif = 6
+                    opacity = 0.95
+                }
+                startplay()
+            } else {
+                wrong++;
+                if (wrong < 3) {
+                    startplay()
+                } else {
+                    stopgame()
+                }
+            }
+        }
+
+        function stopgame() {
+            clearInterval(timer);
+            alert('FINISH!!\n' + vp + "分!");
+            game.innerHTML = ''
+        }
+
+        function newgame() {
+            start.onclick = function () {
+                clearInterval(timer)
+                game.innerHTML = ''
+                opacity = 0.6
+                dif = 2
+                time = 10;
+                wrong = 0;
+                vp = 0;
+                timeleft.innerHTML = 'TIME:' + time;
+                score.innerHTML = 'SCORE:' + vp;
+                timer = setInterval(function () {
+                    time--;
+                    timeleft.innerHTML = 'TIME:' + time;
+                    if (time == 0) {
+                        stopgame()
+                    }
+                }, 1000)
+                startplay()
+            }
+        }
+
+        newgame()
+
+    </script>
+</body>
+
+</html>
